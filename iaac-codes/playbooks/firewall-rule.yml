@@ -1,0 +1,24 @@
+#!/bin/bash
+
+- name: allow firewalld service to using glusterfs
+  hosts: all
+  tasks:
+        - name: add glusterfs
+          firewalld:
+                  zone: public
+                  service: glusterfs
+                  permanent: yes
+                  immediate: yes
+                  state: enabled
+        
+        - name: add ports
+          firewalld:
+                  zone: public
+                  port: '{{ item.port }}/{{ item.proto }}'
+                  permanent: yes
+                  immediate: yes
+                  state: enabled
+          with_items: 
+                  - { port: "24007", proto: "tcp"}
+                  - { port: "24008", proto: "tcp"}
+                  - { port: "49152", proto: "tcp" }

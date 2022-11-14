@@ -1,0 +1,29 @@
+---
+- name: check glusterfsd and glusterd
+  hosts: all
+  gather_facts: true
+  tasks:
+        - name: Activate glusterd and glusterfsd on localhost
+          shell: . /root/iaac-codes/glusterd-and-glusterfs-status.sh
+          register: script_local
+          when: ansible_host == "localhost"
+
+        - debug:
+                var: script_local
+
+        - name: copy script to remote hosts
+          copy:
+              src: /root/iaac-codes/glusterd-and-glusterfs-status.sh
+              dest: /root/scripts-from-master-node/
+              owner: root
+              group: root
+              mode: "0755"
+          when: ansible_host != "localhost"
+
+        - name: execute script
+          shell: ". /root/scripts-from-master-node/glusterd-and-glusterfs-status.sh"
+          register: gluster_script
+          when: ansible_host != "localhost"
+
+        - debug:
+                var: gluster_script
