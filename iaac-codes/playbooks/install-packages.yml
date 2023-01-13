@@ -1,5 +1,5 @@
 ---
-- name: random
+- name: install packages and add docker repo
   hosts: all
   tasks:
         - name: Add docker-ce.repo
